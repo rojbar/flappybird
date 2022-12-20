@@ -12,7 +12,14 @@ export default class Escena extends Phaser.Scene {
 		window.addEventListener(`resize`, this.resize, false);
 		this.load.image(`fondo`,`img/espacio.jpg`);
 		this.load.spritesheet(`heroe`,`img/herore.png`,{ frameWidth: 50, frameHeight: 50});
+		
 		this.load.image(`pipe0`, `img/pipe0.png`);
+		this.load.image(`pipeArriba0`, `img/pipeArriba0.png`);
+		this.load.image(`pipeAbajo0`, `img/pipeAbajo0.png`);
+
+		this.load.image(`pipe1`, `img/pipe1.png`);
+		this.load.image(`pipeArriba1`, `img/pipeArriba1.png`);
+		this.load.image(`pipeAbajo1`, `img/pipeAbajo1.png`);
 	}
 
 	create() {
@@ -58,9 +65,20 @@ export default class Escena extends Phaser.Scene {
 	nuevaColumna() {
 		const columna  =this.physics.add.group();
 		const hueco = Math.floor(Math.random()*5) + 1;
+		const aleatorio = Math.floor(Math.random()*2);
+
 		for (let i = 0; i < 8; i--){
 			if (i !== hueco && i !== hueco + 1 && i !== hueco - 1){
-				const cubo = columna.create(960, i*100 + 10,`pipe0`);
+				//const cubo = columna.create(960, i*100 + 10,`pipe0`);
+				let cubo;
+				if (i === hueco - 2) {
+					cubo = columna.create(960, i * 100,`pipeArriba`+ aleatorio);
+				} else if (i === hueco + 2) {
+					cubo = columna.create(960, i * 100,`pipeAbajo` + aleatorio);
+				} else {
+					cubo = columna.create(960, i * 100,`pipe` + aleatorio);
+				}
+
 				cubo.body.allowGravity = false
 			}
 		}
@@ -74,7 +92,7 @@ export default class Escena extends Phaser.Scene {
 	hitColumna(){
 		alert(`game over`);
 	}
-	
+
 	resize() {
 
 	}
