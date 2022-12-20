@@ -6,7 +6,8 @@ export default class Escena extends Phaser.Scene {
 	}
 
 	player!: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody
-
+	bg!: Phaser.GameObjects.TileSprite
+	
 	preload() {
 		this.resize();
 		window.addEventListener(`resize`, this.resize, false);
@@ -23,7 +24,7 @@ export default class Escena extends Phaser.Scene {
 	}
 
 	create() {
-		this.add.sprite(480,320,`fondo`);
+		this.bg = this.add.tileSprite(480,320,960,640, 'fondo').setScrollFactor(0);
 
 		this.player = this.physics.add.sprite(50,100, `heroe`);
 		this.anims.create({
@@ -49,6 +50,10 @@ export default class Escena extends Phaser.Scene {
 			this.saltar();
 		})
 		this.player.on(`animationComplete`, this.animationComplete, this);
+	}
+
+	update(time: number)  {
+		this.bg.tilePositionX = time*0.1;
 	}
 
 	saltar () {
