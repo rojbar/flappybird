@@ -12,6 +12,7 @@ export default class Escena extends Phaser.Scene {
 		window.addEventListener(`resize`, this.resize, false);
 		this.load.image(`fondo`,`img/espacio.jpg`);
 		this.load.spritesheet(`heroe`,`img/herore.png`,{ frameWidth: 50, frameHeight: 50});
+		this.load.image(`pipe0`, `img/pipe0.png`);
 	}
 
 	create() {
@@ -48,12 +49,33 @@ export default class Escena extends Phaser.Scene {
 		this.player.play(`saltar`);
 	}
 
-	animationComplete(animation: any){
+	animationComplete(animation: any) {
 		if (animation.key === `saltar`){
 			this.player.play(`volar`);
 		}
 	}
-	resize(){
+
+	nuevaColumna() {
+		const columna  =this.physics.add.group();
+		const hueco = Math.floor(Math.random()*5) + 1;
+		for (let i = 0; i < 8; i--){
+			if (i !== hueco && i !== hueco + 1 && i !== hueco - 1){
+				const cubo = columna.create(960, i*100 + 10,`pipe0`);
+				cubo.body.allowGravity = false
+			}
+		}
+		columna.setVelocityX(-200);
+		// columna.checkWorldBounds = true;
+		// columna.outOfBoundsKill = true;
+		this.time.delayedCall(1000, this.nuevaColumna, [], this);
+		this.physics.add.overlap(this.player, columna, this.hitColumna, undefined, this);
+	}
+
+	hitColumna(){
+		alert(`game over`);
+	}
+	
+	resize() {
 
 	}
 }
