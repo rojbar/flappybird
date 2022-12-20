@@ -1,6 +1,7 @@
 import Phaser from 'phaser'
 
 import Escena from './Escena'
+import Perder from './Perder'
 
 const config: Phaser.Types.Core.GameConfig = {
 	type: Phaser.AUTO,
@@ -13,7 +14,7 @@ const config: Phaser.Types.Core.GameConfig = {
 			gravity: { y: 500 },
 		},
 	},
-	scene: [Escena],
+	scene: [Escena, Perder],
 }
 
 export default new Phaser.Game(config)

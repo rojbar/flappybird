@@ -2,7 +2,7 @@ import Phaser from 'phaser'
 
 export default class Escena extends Phaser.Scene {
 	constructor() {
-		super('hello-world')
+		super('escena')
 	}
 
 	player!: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody
@@ -90,7 +90,7 @@ export default class Escena extends Phaser.Scene {
 	}
 
 	hitColumna(){
-		alert(`game over`);
+		this.scene.start(`Perder`);
 	}
 
 	resize() {
