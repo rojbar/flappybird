@@ -12,7 +12,7 @@ export default class Escena extends Phaser.Scene {
 		this.resize();
 		window.addEventListener(`resize`, this.resize, false);
 		this.load.image(`fondo`,`img/espacio.jpg`);
-		this.load.spritesheet(`heroe`,`img/herore.png`,{ frameWidth: 50, frameHeight: 50});
+		this.load.spritesheet(`heroe`,`img/heroe.png`,{ frameWidth: 50, frameHeight: 50});
 		
 		this.load.image(`pipe0`, `img/pipe0.png`);
 		this.load.image(`pipeArriba0`, `img/pipeArriba0.png`);
@@ -42,16 +42,25 @@ export default class Escena extends Phaser.Scene {
 			repeat: 1,
 		});
 		this.input.keyboard.on(`keydown`, (event) => {
-			if (event.keyCode === 32) {
+			if (event.keyCode === 32 ) {
 				this.saltar()
 			}
 		});
-		this.input.on(`pointerdown`, () => {
-			this.saltar();
+		this.input.on(`pointerdown`, () => {	
+			this.saltar()
 		})
-		this.player.on(`animationComplete`, this.animationComplete, this);
+		this.player.on(`animationcomplete`, this.animationComplete, this);	
+		this.player.setCollideWorldBounds(true);
+		this.player.body.onWorldBounds = true;
+
+		this.player.body.world.on('worldbounds', this.worldBoundsCollision, this);
+
+		this.nuevaColumna();
 	}
 
+	worldBoundsCollision(){
+		this.scene.start(`perder`);
+	}
 	update(time: number)  {
 		this.bg.tilePositionX = time*0.1;
 	}
@@ -68,13 +77,12 @@ export default class Escena extends Phaser.Scene {
 	}
 
 	nuevaColumna() {
-		const columna  =this.physics.add.group();
+		const columna = this.physics.add.group();
 		const hueco = Math.floor(Math.random()*5) + 1;
 		const aleatorio = Math.floor(Math.random()*2);
 
-		for (let i = 0; i < 8; i--){
+		for (let i = 0; i < 8; i++){
 			if (i !== hueco && i !== hueco + 1 && i !== hueco - 1){
-				//const cubo = columna.create(960, i*100 + 10,`pipe0`);
 				let cubo;
 				if (i === hueco - 2) {
 					cubo = columna.create(960, i * 100,`pipeArriba`+ aleatorio);
@@ -83,19 +91,18 @@ export default class Escena extends Phaser.Scene {
 				} else {
 					cubo = columna.create(960, i * 100,`pipe` + aleatorio);
 				}
-
+				cubo.setScale(0.2)
 				cubo.body.allowGravity = false
 			}
 		}
 		columna.setVelocityX(-200);
-		// columna.checkWorldBounds = true;
-		// columna.outOfBoundsKill = true;
+
 		this.time.delayedCall(1000, this.nuevaColumna, [], this);
 		this.physics.add.overlap(this.player, columna, this.hitColumna, undefined, this);
 	}
 
 	hitColumna(){
-		this.scene.start(`Perder`);
+		this.scene.start(`perder`);
 	}
 
 	resize() {

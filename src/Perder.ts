@@ -10,7 +10,18 @@ export default class Perder extends Phaser.Scene {
 	}
 
 	create() {
-		this.add.image(480,320, 'gameover')
+		let bg = this.add.image(480,320, 'gameover');
+		bg.displayHeight = 960
+		bg.displayWidth = 640
+		
+		this.input.keyboard.on(`keydown`, (event) => {
+			if (event.keyCode === 32 ) {
+				this.scene.start('escena');
+			}
+		});
+		this.input.on(`pointerdown`, () => {	
+			this.scene.start('escena');
+		})
 	}
 
 }
